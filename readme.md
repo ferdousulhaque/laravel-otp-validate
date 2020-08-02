@@ -81,12 +81,15 @@ Definition of the features in config are:
 - service : enable/disable OTP Service
 - timeout: timeout for OTP
 - digit: OTP Digit
-- enable/disable resend Service
+- resend-service: enable/disable resend Service
 - max-retry: max retry for a single request
+- max-resend: max resend for a single request
 - service-name: for which the service is used
 - company-name: for which company
 - send-by: there are 2 ways to share otp (Email/SMS)
 - email: this key specifies the required information for email (e.g. from, name, subject etc.)
+- sms: configure with SMS gateway to send SMS. 
+(Universal Configurator)
 
 ## OTP Request Templates
 Once the template files are published, open `resources/views/vendor/template-otp/`
@@ -178,3 +181,6 @@ MIT
 - For any bugs, please create an issue.
 - For any problem installing or configurations, feel free to knock me.
 [ferdousul.haque@gmail.com](mailto:ferdousul.haque@gmail.com)
+
+## Featured Article
+- [How to create a laravel OTP/Security code verification for e-commerce website](https://medium.com/@ferdousul.haque/how-to-create-a-laravel-otp-security-code-verification-for-e-commerce-website-55de8161cfb8)
