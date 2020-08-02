@@ -1,0 +1,46 @@
+{
+    "name": "ferdous/laravel-otp-validate",
+    "description": "Laravel package for OTP validation with built-in features like max retry and resend mechanism. Both OTP/Security Code over SMS or Email of your choice with template user-defined.",
+    "type": "library",
+    "homepage": "https://github.com/ferdousulhaque/laravel-otp-validator",
+    "keywords": [
+        "php",
+        "laravel",
+        "otp",
+        "security-code",
+        "email",
+        "sms",
+        "otp-validation",
+        "retry",
+        "resend"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "A S Md Ferdousul Haque",
+            "email": "ferdousul.haque@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Ferdous\\OtpValidator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ferdous\\OtpValidator\\Tests\\": "tests/"
+        }
+    },
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ferdous\\OtpValidator\\OtpValidatorServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0@dev"
+    }
+}

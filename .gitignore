@@ -1,0 +1,27 @@
+### IDE ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+/.idea
+/.php_cs.cache
+
+### Packages ###
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/storage/*.key
+/vendor
+/node_modules
+composer.lock
+composer.phar
+
+### Storages ###
+/public/storage
+.env
+.env.backup
+.DS_Store
