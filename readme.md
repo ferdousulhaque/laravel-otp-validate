@@ -148,7 +148,7 @@ Add the following to the `routes/web.php` file.
 ```
 Route::get('/test/otp-request', 'OtpController@requestForOtp');
 Route::get('/test/otp-validate', 'OtpController@validateOtp');
-Route::get('/test/otp-resend', 'OtpController@resend');
+Route::get('/test/otp-resend', 'OtpController@resendOtp');
 ```
 
 ## Response/Error Descriptions
