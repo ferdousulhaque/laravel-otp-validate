@@ -166,13 +166,23 @@ The below table describes the error codes generated in the response and their co
 }
 ```
 
+#### Request OTP Response Codes
+
 | Code   |                Meanings
 |--------|------------------------------------------
-| 200    |  Successfully Generated OTP and shared.
-| 203    |  Exceeded retry count.
-| 204    |  Invalid Otp.
-| 403    |  Bad request.
-| 404    |  OTP Service disabled.
+| 201    |  Successfully Generated OTP and shared.
+| 400    |  Bad request.
+| 501    |  Resend Service Disabled.
+| 503    |  Service Unavailable.
+
+#### OTP Validate Response Codes
+
+| Code   |                Meanings
+|--------|------------------------------------------
+| 200    |  Correct OTP.
+| 400    |  Invalid OTP.
+| 404    |  OTP Expired/Not Found.
+| 413    |  Max Retry Exceeded.
 
 ## License
 MIT

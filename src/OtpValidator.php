@@ -37,20 +37,20 @@ class OtpValidator
                     ];
                 } else {
                     return [
-                        'code' => 405,
+                        'code' => 503,
                         'status' => 'Resend Service is disabled'
                     ];
                 }
 
             } else {
                 return [
-                    'code' => 404,
+                    'code' => 503,
                     'status' => 'Service Unavailable'
                 ];
             }
         } else {
             return [
-                'code' => 403,
+                'code' => 400,
                 'status' => 'Bad Request'
             ];
         }
@@ -82,7 +82,7 @@ class OtpValidator
                     Otps::where('id', $request->unique_id)
                         ->update(['status' => 'expired']);
                     return [
-                        'code' => 204,
+                        'code' => 413,
                         'status' => false,
                         'resendId' => $request->unique_id,
                         'error' => 'too many wrong try'
@@ -91,7 +91,7 @@ class OtpValidator
                     Otps::where('id', $request->unique_id)
                         ->increment('retry');
                     return [
-                        'code' => 203,
+                        'code' => 400,
                         'status' => false,
                         'resendId' => $request->unique_id,
                         'error' => 'invalid otp'
