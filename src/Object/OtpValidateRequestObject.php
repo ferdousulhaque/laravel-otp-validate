@@ -11,10 +11,10 @@ class OtpValidateRequestObject
 
     /**
      * OtpValidateRequestObject constructor.
-     * @param int $unique_id
+     * @param string $unique_id
      * @param string $otp
      */
-    public function __construct(int $unique_id, string $otp)
+    public function __construct(string $unique_id, string $otp)
     {
         $data_for_validate = [
             'unique_id' => $unique_id,
@@ -37,7 +37,7 @@ class OtpValidateRequestObject
     private function validation($data)
     {
         $validator = Validator::make($data, [
-            'unique_id' => 'required|numeric',
+            'unique_id' => 'required|string',
             'otp' => 'required'
         ]);
         if ($validator->fails()) {

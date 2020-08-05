@@ -9,6 +9,7 @@ use Ferdous\OtpValidator\Object\OtpValidateRequestObject;
 use Ferdous\OtpValidator\Services\EmailService;
 use Ferdous\OtpValidator\Services\SMSService;
 use Illuminate\Support\Carbon;
+use Ramsey\Uuid\Uuid;
 
 class OtpValidator
 {
@@ -28,7 +29,7 @@ class OtpValidator
             if (self::$switch[config('otp.service')] === 1) {
                 $getId = self::getOtpId($request);
 
-                if ($getId > 0) {
+                if (!empty($getId)) {
                     return [
                         'code' => 201,
                         'status' => true,
@@ -63,13 +64,13 @@ class OtpValidator
     public static function validateOtp(OtpValidateRequestObject $request): array
     {
         $getOtpData = Otps::where('status', 'new')
-            ->where('id', $request->unique_id)
+            ->where('uuid', $request->unique_id)
             ->where('created_at', '>', Carbon::now(config('app.timezone'))->subSeconds(config('otp.timeout')))
             ->first();
 
         if (!empty($getOtpData)) {
             if ($getOtpData->otp == $request->otp) {
-                Otps::where('id', $request->unique_id)
+                Otps::where('uuid', $request->unique_id)
                     ->update(['status' => 'used']);
                 return [
                     'code' => 200,
@@ -79,7 +80,7 @@ class OtpValidator
                 ];
             } else {
                 if ($getOtpData->retry > config('otp.max-retry')) {
-                    Otps::where('id', $request->unique_id)
+                    Otps::where('uuid', $request->unique_id)
                         ->update(['status' => 'expired']);
                     return [
                         'code' => 413,
@@ -88,7 +89,7 @@ class OtpValidator
                         'error' => 'too many wrong try'
                     ];
                 } else {
-                    Otps::where('id', $request->unique_id)
+                    Otps::where('uuid', $request->unique_id)
                         ->increment('retry');
                     return [
                         'code' => 400,
@@ -120,9 +121,9 @@ class OtpValidator
 
     /**
      * @param OtpRequestObject $request
-     * @return int
+     * @return string
      */
-    private static function getOtpId(OtpRequestObject $request): int
+    private static function getOtpId(OtpRequestObject $request): string
     {
         try {
             $count = Otps::where('number', $request->number)
@@ -131,26 +132,28 @@ class OtpValidator
                 ->update(['status' => 'expired']);
 
             if (self::$switch[config('otp.resend')] === 0 && intval($count) === 1) {
-                return 0;
+                return "";
             }
 
             $getOtp = self::randomOtpGen();
+            $uuid = md5($request->client_req_id.time());
             $otp_request = Otps::create([
                 'client_req_id' => $request->client_req_id,
                 'number' => $request->number,
                 'email' => $request->email,
                 'type' => $request->type,
                 'otp' => $getOtp,
+                'uuid' => $uuid,
                 'retry' => 0,
                 'status' => 'new'
             ]);
 
             self::sendCode($request, $getOtp);
 
-            return $otp_request->id;
+            return $otp_request->uuid;
         } catch (\Exception $ex) {
             dd($ex);
-            return 0;
+            return "";
         }
     }
 

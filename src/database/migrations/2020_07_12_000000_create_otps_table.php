@@ -20,9 +20,11 @@ class CreateOtpsTable extends Migration
             $table->string('email')->nullable();
             $table->string('type');
             $table->string('otp');
+            $table->string('uuid');
             $table->tinyInteger('retry');
             $table->enum('status',['new','used', 'expired']);
             $table->timestamps();
+            $table->index(['uuid', 'status', 'type']);
         });
     }
 
