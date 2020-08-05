@@ -185,7 +185,7 @@ class OtpValidator
     public static function resendOtp($uniqueId)
     {
         try {
-            $request_data = Otps::where('id', $uniqueId)
+            $request_data = Otps::where('uuid', $uniqueId)
                 ->where('status', 'new')->first();
 
             if (!empty($request_data) && self::$switch[config('otp.resend')] === 1) {
