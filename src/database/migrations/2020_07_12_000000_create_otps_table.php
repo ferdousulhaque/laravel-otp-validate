@@ -13,7 +13,7 @@ class CreateOtpsTable extends Migration
      */
     public function up()
     {
-        Schema::create('otps', function (Blueprint $table) {
+        Schema::create(config('otp.table-name'), function (Blueprint $table) {
             $table->id();
             $table->string('client_req_id');
             $table->string('number');
@@ -35,6 +35,6 @@ class CreateOtpsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('otps');
+        Schema::dropIfExists(config('otp.table-name'));
     }
 }

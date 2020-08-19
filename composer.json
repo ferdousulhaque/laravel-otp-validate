@@ -32,7 +32,9 @@
             "Ferdous\\OtpValidator\\Tests\\": "tests/"
         }
     },
-    "require": {},
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
     "extra": {
         "laravel": {
             "providers": [

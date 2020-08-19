@@ -8,5 +8,8 @@ class Otps extends Model
 {
     protected $guarded = [];
 
-    protected $table = 'otps';
+    public function __construct()
+    {
+        $this->setTable(config('otp.table-name'));
+    }
 }

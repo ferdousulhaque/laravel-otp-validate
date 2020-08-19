@@ -2,6 +2,7 @@
 
 return [
     'service' => env('OTP_SERVICE','enabled'),
+    'table-name' => env('OTP_TABLE_NAME','otps'),
     'timeout' => env('OTP_TIMEOUT', 120),
     'digit' => env('OTP_DIGIT', 4),
     'resend' => env('OTP_RESEND_SERVICE', 'enabled'),
