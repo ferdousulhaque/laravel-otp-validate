@@ -83,7 +83,7 @@ class SMSService implements ServiceInterface
             dd($e->getMessage());
         }
     }
-    
+
     /**
      * @param $to
      * @param $message
@@ -96,10 +96,18 @@ class SMSService implements ServiceInterface
     {
         $config = config('otp.smsc');
         $headers = $config['headers'] ?? [];
-        $params = $config['params']['others'];
-        $number = isset($config['add_code']) ? $config['add_code'].$to : $to;
+        $number = isset($config['add_code']) ? $config['add_code'] . $to : $to;
         $send_to_param_name = $config['params']['send_to_param_name'];
         $msg_param_name = $config['params']['msg_param_name'];
+        $params = $config['params']['others'];
+
+        if ($extra_params) {
+            $params = array_merge($params, $extra_params);
+        }
+
+        if ($extra_headers) {
+            $headers = array_merge($headers, $extra_headers);
+        }
 
         // wrapper
         $wrapper = $config['wrapper'] ?? NULL;
@@ -116,14 +124,6 @@ class SMSService implements ServiceInterface
 
         if ($wrapper && $wrapperParams) {
             $send_vars = array_merge($send_vars, $wrapperParams);
-        }
-
-        if ($extra_params) {
-            $params = array_merge($params, $extra_params);
-        }
-
-        if ($extra_headers) {
-            $headers = array_merge($headers, $extra_headers);
         }
 
         try {
@@ -167,23 +167,22 @@ class SMSService implements ServiceInterface
             $this->responseCode = $response->getStatusCode();
             Log::info("OTP Validator: Number: {$number} SMS Gateway Response Code: {$this->responseCode}");
             Log::info("OTP Validator: Number: {$number} SMS Gateway Response Body: \n {$this->response}");
-
-            // $this->response = $promise->wait()->getBody()->getContents();
-
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                dd($e);
+                //dd($e);
                 $response = $e->getResponse();
                 $this->response = $e->getResponseBodySummary($response);
                 $this->responseCode = $response->getStatusCode();
 
-                Log::error("OTP Validator: Number: {$number} SMS Gateway Response Code: {$this->responseCode}");
-                Log::error("OTP Validator: Number: {$number} SMS Gateway Response Body: \n {$this->response}");
+                Log::error("OTP Validator: Number:{$number} SMS Gateway Response Code: {$this->responseCode}");
+                Log::error("OTP Validator: Number:{$number} SMS Gateway Response Body: \n { $this->response}");
 
                 // $this->response = $e->getResponseBodySummary($e->getResponse());
             }
         }
         return $this;
+
+
     }
 
 }

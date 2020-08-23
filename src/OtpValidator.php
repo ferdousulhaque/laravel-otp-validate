@@ -9,7 +9,6 @@ use Ferdous\OtpValidator\Object\OtpValidateRequestObject;
 use Ferdous\OtpValidator\Services\EmailService;
 use Ferdous\OtpValidator\Services\SMSService;
 use Illuminate\Support\Carbon;
-use Ramsey\Uuid\Uuid;
 
 class OtpValidator
 {
@@ -18,6 +17,8 @@ class OtpValidator
         'enabled' => 1,
         'disabled' => 0
     ];
+
+    private static $tableObject;
 
     /**
      * @param OtpRequestObject $request
@@ -137,6 +138,7 @@ class OtpValidator
 
             $getOtp = self::randomOtpGen();
             $uuid = md5($request->client_req_id.time());
+
             $otp_request = Otps::create([
                 'client_req_id' => $request->client_req_id,
                 'number' => $request->number,
@@ -168,6 +170,11 @@ class OtpValidator
                 $email = new EmailService($request->email, $otp);
                 $email->send();
             }
+        }catch (\Exception $ex){
+            dd($ex->getMessage());
+        }
+
+        try{
             if (intval(config('otp.send-by.sms')) === 1) {
                 $sms = new SMSService($request->number, $otp);
                 $sms->send();

@@ -16,34 +16,8 @@ class OtpValidateRequestObject
      */
     public function __construct(string $unique_id, string $otp)
     {
-        $data_for_validate = [
-            'unique_id' => $unique_id,
-            'otp' => $otp
-        ];
-
-        $valid = self::validation($data_for_validate);
-        if ($valid) {
-            $this->unique_id = $unique_id;
-            $this->otp = $otp;
-        } else {
-            //TODO: Need to Give Something
-        }
-    }
-
-    /**
-     * @param $data
-     * @return bool
-     */
-    private function validation($data)
-    {
-        $validator = Validator::make($data, [
-            'unique_id' => 'required|string',
-            'otp' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return false;
-        }
-        return true;
+        $this->unique_id = $unique_id;
+        $this->otp = $otp;
     }
 }
 

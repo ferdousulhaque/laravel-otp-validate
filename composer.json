@@ -22,6 +22,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Ferdous\\OtpValidator\\": "src/"
@@ -33,13 +34,18 @@
         }
     },
     "require": {
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "nesbot/carbon": "^2.22",
+        "php": "^7.1.8"
     },
     "extra": {
         "laravel": {
             "providers": [
                 "Ferdous\\OtpValidator\\OtpValidatorServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "OtpVerifier": "Ferdous\\OtpValidator\\OtpValidatorFacade"
+            }
         }
     },
     "require-dev": {
