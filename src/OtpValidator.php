@@ -3,12 +3,15 @@
 
 namespace Ferdous\OtpValidator;
 
-use Ferdous\OtpValidator\Models\Otps;
+use Ferdous\OtpValidator\Constants\DBStates;
+use Ferdous\OtpValidator\Constants\StatusCodes;
+use Ferdous\OtpValidator\Constants\StatusMessages;
 use Ferdous\OtpValidator\Object\OtpRequestObject;
 use Ferdous\OtpValidator\Object\OtpValidateRequestObject;
-use Ferdous\OtpValidator\Services\EmailService;
-use Ferdous\OtpValidator\Services\SMSService;
-use Illuminate\Support\Carbon;
+use Ferdous\OtpValidator\Services\OtpService;
+use Ferdous\OtpValidator\Services\Responder;
+use Ferdous\OtpValidator\Services\Transporter;
+
 
 class OtpValidator
 {
@@ -18,7 +21,8 @@ class OtpValidator
         'disabled' => 0
     ];
 
-    private static $tableObject;
+    const ENABLED = 1;
+    const DISABLED = 0;
 
     /**
      * @param OtpRequestObject $request
@@ -26,35 +30,58 @@ class OtpValidator
      */
     public static function requestOtp(OtpRequestObject $request)
     {
-        if (!empty($request->client_req_id)) {
-            if (self::$switch[config('otp.service')] === 1) {
-                $getId = self::getOtpId($request);
+        if (self::$switch[config('otp.service')] !== self::ENABLED) {
+            return Responder::formatter([
+                'code' => StatusCodes::SERVICE_UNAVAILABLE,
+                'message' => StatusMessages::SERVICE_UNAVAILABLE
+            ]);
+        }
 
-                if (!empty($getId)) {
-                    return [
-                        'code' => 201,
-                        'status' => true,
-                        'uniqueId' => $getId,
-                        'type' => $request->type
-                    ];
-                } else {
-                    return [
-                        'code' => 503,
-                        'status' => 'Resend Service is disabled'
-                    ];
-                }
+        if (empty($request->client_req_id)) {
+            return Responder::formatter([
+                'code' => StatusCodes::BAD_REQUEST,
+                'message' => StatusMessages::BAD_REQUEST
+            ]);
+        }
 
-            } else {
-                return [
-                    'code' => 503,
-                    'status' => 'Service Unavailable'
-                ];
-            }
-        } else {
-            return [
-                'code' => 400,
-                'status' => 'Bad Request'
-            ];
+        $getId = self::getUuidId($request);
+
+        if(empty($getId))
+            return Responder::formatter([
+                'code' => StatusCodes::RESEND_SERVICE_DISABLED,
+                'message' => StatusMessages::RESEND_SERVICE_DISABLED
+            ]);
+
+        return Responder::formatter([
+            'code' => StatusCodes::SUCCESSFULLY_SENT_OTP,
+            'message' => StatusMessages::SUCCESSFULLY_SENT_OTP,
+            'uniqueId' => $getId,
+            'type' => $request->type
+        ]);
+    }
+
+    /**
+     * @param OtpRequestObject $request
+     * @return string
+     */
+    private static function getUuidId(OtpRequestObject $request): string
+    {
+        try {
+            $data = OtpService::expireOldOtpRequests($request);
+
+            if(self::$switch[config('otp.resend')] === self::DISABLED && count($data) > 0) return "";
+
+            // OTP Generation and Persistence
+            $getOtp = OtpService::otpGenerator();
+            $uuid = md5($request->client_req_id.time());
+            OtpService::createOtpRecord($request, $getOtp, $uuid);
+
+            // Send OTP
+            Transporter::sendCode($request, $getOtp);
+
+            return $uuid;
+        } catch (\Exception $ex) {
+            return $ex->getMessage();
         }
     }
 
@@ -64,125 +91,41 @@ class OtpValidator
      */
     public static function validateOtp(OtpValidateRequestObject $request): array
     {
-        $getOtpData = Otps::where('status', 'new')
-            ->where('uuid', $request->unique_id)
-            ->where('created_at', '>', Carbon::now(config('app.timezone'))->subSeconds(config('otp.timeout')))
-            ->first();
+        $getData = OtpService::findRequest($request->unique_id);
 
-        if (!empty($getOtpData)) {
-            if ($getOtpData->otp == $request->otp) {
-                Otps::where('uuid', $request->unique_id)
-                    ->update(['status' => 'used']);
-                return [
-                    'code' => 200,
-                    'status' => true,
-                    'requestId' => $getOtpData->client_req_id,
-                    'type' => $getOtpData->type
-                ];
+        if (!empty($getData)) {
+            if ($getData->otp == $request->otp) {
+                OtpService::updateTo($request, DBStates::USED);
+                return Responder::formatter([
+                    'code' => StatusCodes::OTP_VERIFIED,
+                    'message' => StatusMessages::TOO_MANY_WRONG_RETRY,
+                    'requestId' => $getData->client_req_id,
+                    'type' => $getData->type
+                ]);
             } else {
-                if ($getOtpData->retry > config('otp.max-retry')) {
-                    Otps::where('uuid', $request->unique_id)
-                        ->update(['status' => 'expired']);
-                    return [
-                        'code' => 413,
-                        'status' => false,
-                        'resendId' => $request->unique_id,
-                        'error' => 'too many wrong try'
-                    ];
+                if ($getData->retry > config('otp.max-retry')) {
+                    OtpService::updateTo($request, DBStates::EXPIRED);
+                    return Responder::formatter([
+                        'code' => StatusCodes::TOO_MANY_WRONG_RETRY,
+                        'message' => StatusMessages::TOO_MANY_WRONG_RETRY,
+                        'resendId' => $request->unique_id
+                    ]);
                 } else {
-                    Otps::where('uuid', $request->unique_id)
-                        ->increment('retry');
-                    return [
-                        'code' => 400,
-                        'status' => false,
-                        'resendId' => $request->unique_id,
-                        'error' => 'invalid otp'
-                    ];
+                    OtpService::updateRetry($request);
+                    return Responder::formatter([
+                        'code' => StatusCodes::INVALID_OTP_GIVEN,
+                        'message' => StatusMessages::INVALID_OTP_GIVEN,
+                        'resendId' => $request->unique_id
+                    ]);
                 }
             }
         } else {
-            return [
-                'code' => 404,
-                'status' => false,
-                'resendId' => $request->unique_id,
-                'error' => 'otp expired/timeout'
-            ];
-        }
-    }
-
-    /**
-     * @param int $defaultDigit
-     * @return int
-     */
-    private static function randomOtpGen(int $defaultDigit = 4)
-    {
-        $digit = config('otp.digit') ?? $defaultDigit;
-        return rand(pow(10, $digit - 1), pow(10, $digit) - 1);
-    }
-
-    /**
-     * @param OtpRequestObject $request
-     * @return string
-     */
-    private static function getOtpId(OtpRequestObject $request): string
-    {
-        try {
-            $count = Otps::where('number', $request->number)
-                ->where('type', $request->type)
-                ->where('status', 'new')
-                ->update(['status' => 'expired']);
-
-            if (self::$switch[config('otp.resend')] === 0 && intval($count) === 1) {
-                return "";
-            }
-
-            $getOtp = self::randomOtpGen();
-            $uuid = md5($request->client_req_id.time());
-
-            $otp_request = Otps::create([
-                'client_req_id' => $request->client_req_id,
-                'number' => $request->number,
-                'email' => $request->email,
-                'type' => $request->type,
-                'otp' => $getOtp,
-                'uuid' => $uuid,
-                'retry' => 0,
-                'status' => 'new'
+            return Responder::formatter([
+                'code' => StatusCodes::OTP_TIMEOUT,
+                'message' => StatusMessages::OTP_TIMEOUT,
+                'resendId' => $request->unique_id
             ]);
-
-            self::sendCode($request, $getOtp);
-
-            return $otp_request->uuid;
-        } catch (\Exception $ex) {
-            dd($ex);
-            return "";
         }
-    }
-
-    /**
-     * @param OtpRequestObject $request
-     * @param string $otp
-     */
-    private static function sendCode(OtpRequestObject $request, string $otp)
-    {
-        try{
-            if (intval(config('otp.send-by.email')) === 1) {
-                $email = new EmailService($request->email, $otp);
-                $email->send();
-            }
-        }catch (\Exception $ex){
-            dd($ex->getMessage());
-        }
-
-        try{
-            if (intval(config('otp.send-by.sms')) === 1) {
-                $sms = new SMSService($request->number, $otp);
-                $sms->send();
-            }
-        }catch (\Exception $ex){
-            dd($ex->getMessage());
-        }
-
     }
 
     /**
@@ -192,8 +135,7 @@ class OtpValidator
     public static function resendOtp($uniqueId)
     {
         try {
-            $request_data = Otps::where('uuid', $uniqueId)
-                ->where('status', 'new')->first();
+            $request_data = OtpService::findRequest($uniqueId, 1);
 
             if (!empty($request_data) && self::$switch[config('otp.resend')] === 1) {
                 return self::requestOtp(

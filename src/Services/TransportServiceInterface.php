@@ -4,7 +4,7 @@
 namespace Ferdous\OtpValidator\Services;
 
 
-interface ServiceInterface
+interface TransportServiceInterface
 {
     public function send();
 }

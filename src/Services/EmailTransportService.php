@@ -4,7 +4,7 @@ namespace Ferdous\OtpValidator\Services;
 
 use Illuminate\Support\Facades\Mail;
 
-class EmailService implements ServiceInterface
+class EmailTransportService implements TransportServiceInterface
 {
     private $email;
     private $otp;

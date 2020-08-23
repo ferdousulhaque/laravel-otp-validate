@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\RequestException;
 use Ferdous\OtpValidator\Exceptions\InvalidMethodException;
 use Illuminate\Support\Facades\Log;
 
-class SMSService implements ServiceInterface
+class SMSTransportService implements TransportServiceInterface
 {
     private $number;
     private $otp;

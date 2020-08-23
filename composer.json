@@ -18,7 +18,8 @@
     "authors": [
         {
             "name": "A S Md Ferdousul Haque",
-            "email": "ferdousul.haque@gmail.com"
+            "email": "ferdousul.haque@gmail.com",
+            "homepage": "http://ferdousulhaque.66ghz.com"
         }
     ],
     "minimum-stability": "dev",
@@ -34,9 +35,17 @@
         }
     },
     "require": {
+        "php": "^7.1.8",
         "guzzlehttp/guzzle": "^6.3",
         "nesbot/carbon": "^2.22",
-        "php": "^7.1.8"
+        "illuminate/support": "^7.0",
+        "illuminate/contracts": "^7.0",
+        "illuminate/container": "^7.0",
+        "illuminate/database": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0@dev",
+        "laravel/framework": "^7.0"
     },
     "extra": {
         "laravel": {
@@ -47,8 +56,5 @@
                 "OtpVerifier": "Ferdous\\OtpValidator\\OtpValidatorFacade"
             }
         }
-    },
-    "require-dev": {
-        "orchestra/testbench": "^6.0@dev"
     }
 }
