@@ -127,7 +127,7 @@ class OtpController extends Controller
      */
     public function validateOtp(Request $request)
     {
-        $uniqId = $request->input('id');
+        $uniqId = $request->input('uniqueId');
         $otp = $request->input('otp');
         return OtpValidator::validateOtp(
             new OtpValidateRequestObject($uniqId,$otp)
