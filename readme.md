@@ -161,8 +161,8 @@ The below table describes the error codes generated in the response and their co
 ```json
 {
   "code": 200,
-  "status": true,
-  "requestId": 1234,
+  "message": "OTP Sent to the recipient",
+  "requestId": 1432,
   "type": "buy-shirt"
 }
 ```
