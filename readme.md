@@ -135,10 +135,12 @@ class OtpController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return array
      */
-    public function resendOtp($uniqueId)
+    public function resendOtp(Request $request)
     {
+        $uniqueId = $request->input('uniqueId');
         return OtpValidator::resendOtp($uniqueId);
     }
 
