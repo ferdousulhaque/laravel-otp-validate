@@ -52,8 +52,9 @@ Add the following Key-Value pair to the `.env` file in the Laravel application
 OTP_SERVICE='enabled'
 OTP_TIMEOUT=120
 OTP_DIGIT=5
-OTP_RESEND_SERVICE=
+OTP_RESEND_SERVICE='enabled'
 OTP_MAX_RETRY=2
+OTP_MAX_RESEND=1
 # Company and Service
 OTP_SERVICE_NAME=
 OTP_COMPANY_NAME=
@@ -116,7 +117,7 @@ class OtpController extends Controller
     public function requestForOtp()
     {
         return OtpValidator::requestOtp(
-            new OtpRequestObject('1432', '01711084714', 'buy-shirt','ferdousul.haque@gmail.com')
+            new OtpRequestObject('1432', 'buy-shirt', '01711084714', 'ferdousul.haque@gmail.com')
         );
     }
 
@@ -136,11 +137,9 @@ class OtpController extends Controller
     /**
      * @return array
      */
-    public function resendOtp()
+    public function resendOtp($uniqueId)
     {
-        return OtpValidator::requestOtp(
-            new OtpRequestObject('1432', '01711084714', 'buy-shirt','ferdousul.haque@gmail.com',1)
-        );
+        return OtpValidator::resendOtp($uniqueId);
     }
 
 }
@@ -194,3 +193,117 @@ MIT
 
 ## Featured Article
 - [How to create a laravel OTP/Security code verification for e-commerce website](https://medium.com/@ferdousul.haque/how-to-create-a-laravel-otp-security-code-verification-for-e-commerce-website-55de8161cfb8)
+
+## Example SMS Gateways Configuration
+
+### Muthofun
+If you are trying to integrate one of most popular SMS gateway of Bangladesh, muthofun is a popular Bulk SMS Gateway in our country. Here is a sample configuration for the Muthofun SMS Gateway
+
+```php
+'smsc' => [
+    'url' => env('OTP_SMSC_URL'),
+    'method' => env('OTP_SMSC_METHOD', 'GET'),
+    'add_code' => env('OTP_COUNTRY_CODE',null),
+    'json' => env('OTP_SMSC_OVER_JSON',1),
+    'headers' => [],
+    'params' => [
+        'send_to_param_name' => env('OTP_SMSC_PARAM_TO_NAME','number'),
+        'msg_param_name' => env('OTP_SMSC_PARAM_MSG_NAME','msg'),
+        'others' => [
+            'user' => env('OTP_SMSC_USER'),
+            'password' => env('OTP_SMSC_PASS'),
+            'unicode' => 1
+        ],
+    ]
+];
+```
+
+.env file will be as the following
+
+```
+OTP_SMSC_URL='http://clients.muthofun.com:8901/esmsgw/sendsms.jsp?'
+OTP_SMSC_METHOD='GET'
+OTP_COUNTRY_CODE='88'
+OTP_SMSC_OVER_JSON=0
+OTP_SMSC_PARAM_TO_NAME='mobiles'
+OTP_SMSC_PARAM_MSG_NAME='sms'
+OTP_SMSC_USER='YourUserName'
+OTP_SMSC_PASS='YourPassWord'
+```
+
+### Infobip
+Example for integrating with the infobip SMS platform, renowned SMS Gateway.
+
+using GET method
+
+```php
+'smsc' => [
+    'url' => env('OTP_SMSC_URL'),
+    'method' => env('OTP_SMSC_METHOD', 'GET'),
+    'add_code' => env('OTP_COUNTRY_CODE',null),
+    'json' => env('OTP_SMSC_OVER_JSON',1),
+    'headers' => [],
+    'params' => [
+        'send_to_param_name' => env('OTP_SMSC_PARAM_TO_NAME','number'),
+        'msg_param_name' => env('OTP_SMSC_PARAM_MSG_NAME','msg'),
+        'others' => [
+            'username' => env('OTP_SMSC_USER'),
+            'password' => env('OTP_SMSC_PASS'),
+            'from' => 'InfoSMS',
+            'flash' => true
+        ],
+    ]
+];
+```
+
+.env file will be as the following
+
+```
+OTP_SMSC_URL='https://{baseUrl}/sms/1/text/query?'
+OTP_SMSC_METHOD='GET'
+OTP_COUNTRY_CODE='88'
+OTP_SMSC_OVER_JSON=0
+OTP_SMSC_PARAM_TO_NAME='to'
+OTP_SMSC_PARAM_MSG_NAME='text'
+OTP_SMSC_USER='YourUserName'
+OTP_SMSC_PASS='YourPassWord'
+```
+
+### msg91
+Sample for integrating with the msg91 SMS gateway.
+
+using GET method
+
+```php
+'smsc' => [
+        'url' => env('OTP_SMSC_URL'),
+        'method' => env('OTP_SMSC_METHOD', 'GET'),
+        'add_code' => env('OTP_COUNTRY_CODE',null),
+        'json' => env('OTP_SMSC_OVER_JSON',1),
+        'headers' => [],
+        'params' => [
+            'send_to_param_name' => env('OTP_SMSC_PARAM_TO_NAME','number'),
+            'msg_param_name' => env('OTP_SMSC_PARAM_MSG_NAME','msg'),
+            'others' => [
+                'authkey' => 'YourAuthKey',
+                'sender' => 'YourSenderId',
+                'route' => '1',
+                'country' => '88',
+            ],
+        ],
+        'wrapper' => 'sms',
+    ];
+```
+
+.env file will be as the following
+
+```
+OTP_SMSC_URL='https://control.msg91.com/api/v2/sendsms?'
+OTP_SMSC_METHOD='POST'
+OTP_COUNTRY_CODE='88'
+OTP_SMSC_OVER_JSON=1
+OTP_SMSC_PARAM_TO_NAME='to'
+OTP_SMSC_PARAM_MSG_NAME='text'
+OTP_SMSC_USER='YourUserName'
+OTP_SMSC_PASS='YourPassWord'
+```
