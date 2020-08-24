@@ -54,7 +54,7 @@ class DatabaseServices
      * @return mixed
      */
     public static function expireOld(OtpRequestObject $request){
-        return Otps::where('number', $request->number)
+        return Otps::where('client_req_id', $request->client_req_id)
             ->where('type', $request->type)
             ->where('status', 'new')
             ->update(['status' => 'expired']);
@@ -77,5 +77,10 @@ class DatabaseServices
     public static function updateRetry(OtpValidateRequestObject $request){
         return Otps::where('uuid', $request->unique_id)
             ->increment('retry');
+    }
+
+    public static function countResend(OtpRequestObject $request){
+        return Otps::where('client_req_id', $request->client_req_id)
+            ->where('type', $request->type)->count();
     }
 }

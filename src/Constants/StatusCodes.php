@@ -12,6 +12,7 @@ final class StatusCodes
     const SUCCESSFULLY_SENT_OTP = 201;
     const OTP_VERIFIED = 200;
     const TOO_MANY_WRONG_RETRY = 413;
+    const RESEND_EXCEEDED = 413;
     const INVALID_OTP_GIVEN = 400;
     const OTP_TIMEOUT = 404;
 }

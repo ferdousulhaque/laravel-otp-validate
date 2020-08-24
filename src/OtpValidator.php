@@ -69,7 +69,10 @@ class OtpValidator
         try {
             $data = OtpService::expireOldOtpRequests($request);
 
-            if(self::$switch[config('otp.resend')] === self::DISABLED && count($data) > 0) return "";
+            if(self::$switch[config('otp.resend')] === self::DISABLED && !empty($data)) return "";
+
+            // Resend Exceed
+            if(self::$switch[config('otp.resend')] === self::ENABLED && OtpService::countResend($request) > config('otp.max-resend')) return "";
 
             // OTP Generation and Persistence
             $getOtp = OtpService::otpGenerator();
@@ -130,14 +133,14 @@ class OtpValidator
 
     /**
      * @param $uniqueId
-     * @return array|int
+     * @return array
      */
     public static function resendOtp($uniqueId)
     {
         try {
             $request_data = OtpService::findRequest($uniqueId, 1);
 
-            if (!empty($request_data) && self::$switch[config('otp.resend')] === 1) {
+            if (!empty($request_data) && self::$switch[config('otp.resend')] === self::ENABLED) {
                 return self::requestOtp(
                     new OtpRequestObject(
                         $request_data->client_req_id,
@@ -147,9 +150,9 @@ class OtpValidator
                     )
                 );
             }
-            return 0;
+            return [];
         } catch (\Exception $ex) {
-            return 0;
+            return [];
         }
     }
 }

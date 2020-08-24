@@ -24,7 +24,7 @@ class CreateOtpsTable extends Migration
             $table->tinyInteger('retry');
             $table->enum('status',['new','used', 'expired']);
             $table->timestamps();
-            $table->index(['uuid', 'status', 'type']);
+            $table->index(['client_req_id', 'uuid', 'status', 'type']);
         });
     }
 

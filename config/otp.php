@@ -7,6 +7,7 @@ return [
     'digit' => env('OTP_DIGIT', 4),
     'resend' => env('OTP_RESEND_SERVICE', 'enabled'),
     'max-retry' => env('OTP_MAX_RETRY',2),
+    'max-resend' => env('OTP_MAX_RESEND',1),
     'service-name' => env('OTP_SERVICE_NAME','OTP Service'),
     'company-name' => env('OTP_COMPANY_NAME','Test Company'),
     'send-by' => [

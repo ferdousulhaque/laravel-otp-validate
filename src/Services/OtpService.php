@@ -62,4 +62,8 @@ class OtpService
     public static function updateRetry(OtpValidateRequestObject $request): void{
         DatabaseServices::updateRetry($request);
     }
+
+    public static function countResend(OtpRequestObject $request){
+        return DatabaseServices::countResend($request);
+    }
 }

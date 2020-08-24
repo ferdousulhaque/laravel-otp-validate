@@ -13,4 +13,5 @@ final class StatusMessages
     const TOO_MANY_WRONG_RETRY = 'Too Many Wrong Try';
     const INVALID_OTP_GIVEN = 'Invalid Otp';
     const OTP_TIMEOUT = 'Otp Expired/Timeout';
+    const RESEND_EXCEEDED = 'Resend Exceeded';
 }
