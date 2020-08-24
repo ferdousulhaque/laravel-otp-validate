@@ -196,7 +196,7 @@ MIT
 
 ## Example SMS Gateways Configuration
 
-### Muthofun
+### [Muthofun](https://www.muthofun.com/)
 If you are trying to integrate one of most popular SMS gateway of Bangladesh, muthofun is a popular Bulk SMS Gateway in our country. Here is a sample configuration for the Muthofun SMS Gateway
 
 ```php
@@ -231,7 +231,7 @@ OTP_SMSC_USER='YourUserName'
 OTP_SMSC_PASS='YourPassWord'
 ```
 
-### Infobip
+### [Infobip](https://www.infobip.com/)
 Example for integrating with the infobip SMS platform, renowned SMS Gateway.
 
 using GET method
@@ -269,7 +269,7 @@ OTP_SMSC_USER='YourUserName'
 OTP_SMSC_PASS='YourPassWord'
 ```
 
-### msg91
+### [msg91](https://msg91.com)
 Sample for integrating with the msg91 SMS gateway.
 
 using GET method
