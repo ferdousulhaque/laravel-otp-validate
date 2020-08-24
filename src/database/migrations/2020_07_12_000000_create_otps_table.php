@@ -16,7 +16,7 @@ class CreateOtpsTable extends Migration
         Schema::create(config('otp.table-name'), function (Blueprint $table) {
             $table->id();
             $table->string('client_req_id');
-            $table->string('number');
+            $table->string('number')->nullable();
             $table->string('email')->nullable();
             $table->string('type');
             $table->string('otp');

@@ -37,7 +37,7 @@ class OtpValidator
             ]);
         }
 
-        if (empty($request->client_req_id)) {
+        if (empty($request)) {
             return Responder::formatter([
                 'code' => StatusCodes::BAD_REQUEST,
                 'message' => StatusMessages::BAD_REQUEST
@@ -94,6 +94,12 @@ class OtpValidator
      */
     public static function validateOtp(OtpValidateRequestObject $request): array
     {
+        if(empty($request)){
+            return Responder::formatter([
+                'code' => StatusCodes::BAD_REQUEST,
+                'message' => StatusMessages::BAD_REQUEST
+            ]);
+        }
         $getData = OtpService::findRequest($request->unique_id);
 
         if (!empty($getData)) {
@@ -144,8 +150,8 @@ class OtpValidator
                 return self::requestOtp(
                     new OtpRequestObject(
                         $request_data->client_req_id,
-                        $request_data->number,
                         $request_data->type,
+                        $request_data->number,
                         $request_data->email
                     )
                 );

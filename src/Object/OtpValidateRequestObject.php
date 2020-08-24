@@ -16,6 +16,7 @@ class OtpValidateRequestObject
      */
     public function __construct(string $unique_id, string $otp)
     {
+        if(empty($unique_id) || empty($otp)) return null;
         $this->unique_id = $unique_id;
         $this->otp = $otp;
     }

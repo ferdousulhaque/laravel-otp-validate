@@ -14,23 +14,36 @@ class Transporter
      */
     public static function sendCode(OtpRequestObject $request, string $otp)
     {
-        try{
-            if (intval(config('otp.send-by.email')) === 1) {
-                $email = new EmailTransportService($request->email, $otp);
-                $email->send();
-            }
-        }catch (\Exception $ex){
-            dd($ex->getMessage());
-        }
+        self::sendOverEmail($request, $otp);
+        self::sendOverSMS($request, $otp);
+    }
 
-        try{
-            if (intval(config('otp.send-by.sms')) === 1) {
-                $sms = new SMSTransportService($request->number, $otp);
-                $sms->send();
+    public static function sendOverEmail(OtpRequestObject $request, string $otp)
+    {
+        try {
+            if (intval(config('otp.send-by.email')) === 1 && !empty($request->email)) {
+                self::sendOver(new EmailTransportService($request->email, $otp));
             }
-        }catch (\Exception $ex){
-            dd($ex->getMessage());
+        } catch (\Exception $ex) {
+            return false;
+            //dd($ex->getMessage());
         }
+    }
 
+    public static function sendOverSMS(OtpRequestObject $request, string $otp)
+    {
+        try {
+            if (intval(config('otp.send-by.sms')) === 1 && !empty($request->number)) {
+                self::sendOver(new SMSTransportService($request->number, $otp));
+            }
+        } catch (\Exception $ex) {
+            return false;
+            //dd($ex->getMessage());
+        }
+    }
+
+    public static function sendOver(TransportServiceInterface $service)
+    {
+        $service->send();
     }
 }
