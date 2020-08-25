@@ -160,7 +160,7 @@ The below table describes the error codes generated in the response and their co
 
 ```json
 {
-  "code": 200,
+  "code": 201,
   "message": "OTP Sent to the recipient",
   "requestId": 1432,
   "type": "buy-shirt"
@@ -188,8 +188,11 @@ The below table describes the error codes generated in the response and their co
 ## License
 MIT
 
+## Special Thanks
+- [Nahid Bin Azhar](https://github.com/nahid) For the Feedback.
+
 ## Support
-- For any bugs, please create an issue.
+- For any bugs, please help to create an issue.
 - For any problem installing or configurations, feel free to knock me.
 [ferdousul.haque@gmail.com](mailto:ferdousul.haque@gmail.com)
 
