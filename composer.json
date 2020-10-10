@@ -36,7 +36,7 @@
     },
     "require": {
         "php": "^7.1.8",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^7.0.1",
         "nesbot/carbon": "^2.22",
         "illuminate/support": "^7.0",
         "illuminate/contracts": "^7.0",
