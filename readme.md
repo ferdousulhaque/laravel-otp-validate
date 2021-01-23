@@ -50,6 +50,7 @@ Add the following Key-Value pair to the `.env` file in the Laravel application
 ```
 # Basic OTP Configs
 OTP_SERVICE='enabled'
+OTP_TABLE_NAME='otps'
 OTP_TIMEOUT=120
 OTP_DIGIT=5
 OTP_RESEND_SERVICE='enabled'
