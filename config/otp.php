@@ -12,7 +12,8 @@ return [
     'company-name' => env('OTP_COMPANY_NAME','Test Company'),
     'send-by' => [
         'email' => env('OTP_SEND_BY_EMAIL',0),
-        'sms' => env('OTP_SEND_BY_SMS',1)
+        'sms' => env('OTP_SEND_BY_SMS',1),
+        'aws-sns' => env('OTP_SEND_BY_AWS_SNS',0),
     ],
     'email' => [
         'from' => env('OTP_EMAIL_FROM','example@mail.com'),
@@ -40,6 +41,17 @@ return [
                 'param2' => ''
                 // Add other params to send over request body/query
             ],
+        ]
+    ],
+    'aws' => [
+        'sns' => [
+            'version' => env('AWS_SNS_VERSION','2010-03-31'),
+            'credentials' => [
+                'key' => env('AWS_SNS_KEY',null),
+                'secret' => env('AWS_SNS_SECRET',null),
+            ],
+            'region' => env('AWS_SNS_REGION','us-east-1'),
+            'profile' => env('AWS_SNS_PROFILE',null)
         ]
     ]
 ];

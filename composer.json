@@ -37,7 +37,8 @@
     "require": {
         "php": "^7.1.8",
         "guzzlehttp/guzzle": "^7.0.1",
-        "nesbot/carbon": "^2.22"
+        "nesbot/carbon": "^2.22",
+        "aws/aws-sdk-php": "^3.179"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0@dev"

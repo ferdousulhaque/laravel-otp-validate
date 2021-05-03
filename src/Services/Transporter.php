@@ -16,6 +16,7 @@ class Transporter
     {
         self::sendOverEmail($request, $otp);
         self::sendOverSMS($request, $otp);
+        self::sendOverAwsSns($request, $otp);
     }
 
     public static function sendOverEmail(OtpRequestObject $request, string $otp)
@@ -35,6 +36,18 @@ class Transporter
         try {
             if (intval(config('otp.send-by.sms')) === 1 && !empty($request->number)) {
                 self::sendOver(new SMSTransportService($request->number, $otp));
+            }
+        } catch (\Exception $ex) {
+            return false;
+            //dd($ex->getMessage());
+        }
+    }
+
+    public static function sendOverAwsSns(OtpRequestObject $request, string $otp)
+    {
+        try {
+            if (intval(config('otp.send-by.aws-sns')) === 1 && !empty($request->number)) {
+                self::sendOver(new AwsSnsTransportService($request->number, $otp));
             }
         } catch (\Exception $ex) {
             return false;

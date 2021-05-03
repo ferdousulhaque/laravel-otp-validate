@@ -75,6 +75,10 @@ OTP_SMSC_PARAM_TO_NAME=
 OTP_SMSC_PARAM_MSG_NAME=
 OTP_SMSC_USER=
 OTP_SMSC_PASS=
+AWS_SNS_VERSION=
+AWS_SNS_KEY=
+AWS_SNS_SECRET=
+AWS_SNS_REGION=
 ```
 
 ## Definitions
@@ -88,7 +92,7 @@ Definition of the features in config are:
 - max-resend: max resend for a single request
 - service-name: for which the service is used
 - company-name: for which company
-- send-by: there are 2 ways to share otp (Email/SMS)
+- send-by: there are 3 ways to share otp (Email/SMS/AWS SNS)
 - email: this key specifies the required information for email (e.g. from, name, subject etc.)
 - sms: configure with SMS gateway to send SMS. 
 (Universal Configurator)
@@ -313,3 +317,30 @@ OTP_SMSC_PARAM_MSG_NAME='text'
 OTP_SMSC_USER='YourUserName'
 OTP_SMSC_PASS='YourPassWord'
 ```
+
+### [Using AWS Simple Notification Service (SNS)](https://aws.amazon.com/sns/)
+Sample steps for integrating with the AWS SNS.
+
+Create a IAM user with the appropriate policy permissions. Go to the IAM service and create your application’s user; be sure to capture its AWS Key and AWS Secret values and put this into your environment file. From there add the following policy to the user or its group.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowSendingSMSMessages",
+            "Effect": "Allow",
+            "Action": [
+                "sns:Publish",
+                "sns:SetSMSAttributes",
+                "sns:CheckIfPhoneNumberIsOptedOut"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
+
+Here we set the ability to publish, set SMS attributes and check for opt-outs and apply this across a wildcard resource instead of a specific topic as we will be sending notifications directly to phone numbers and not an SNS topic.
