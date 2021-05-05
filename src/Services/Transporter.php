@@ -47,7 +47,7 @@ class Transporter
     {
         try {
             if (intval(config('otp.send-by.aws-sns')) === 1 && !empty($request->number)) {
-                self::sendOver(new AwsSnsTransportService($request->number, $otp));
+                self::sendOver(new SnsTransportService($request->number, $otp));
             }
         } catch (\Exception $ex) {
             return false;
