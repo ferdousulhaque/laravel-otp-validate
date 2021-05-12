@@ -97,6 +97,13 @@ Definition of the features in config are:
 - sms: configure with SMS gateway to send SMS. 
 (Universal Configurator)
 
+## Defining Send By on Runtime
+
+The config method can be used to set send-by [ SMS / Email / SNS ] at runtime.
+
+    config('otp.send-by.email', 1);
+    config('otp.send-by.sms', 0);
+
 ## OTP Request Templates
 Once the template files are published, open `resources/views/vendor/template-otp/`
 

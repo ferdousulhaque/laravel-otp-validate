@@ -107,7 +107,7 @@ class OtpValidator
                 OtpService::updateTo($request, DBStates::USED);
                 return Responder::formatter([
                     'code' => StatusCodes::OTP_VERIFIED,
-                    'message' => StatusMessages::TOO_MANY_WRONG_RETRY,
+                    'message' => StatusMessages::VERIFIED_OTP,
                     'requestId' => $getData->client_req_id,
                     'type' => $getData->type
                 ]);

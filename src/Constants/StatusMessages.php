@@ -14,4 +14,5 @@ final class StatusMessages
     const INVALID_OTP_GIVEN = 'Invalid Otp';
     const OTP_TIMEOUT = 'Otp Expired/Timeout';
     const RESEND_EXCEEDED = 'Resend Exceeded';
+    const VERIFIED_OTP = 'Otp verified';
 }
