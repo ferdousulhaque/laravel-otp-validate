@@ -45,13 +45,6 @@ class SNSTransportService implements TransportServiceInterface
                 ),
                 'region' => config('otp.aws.sns.region'),
             ]);
-
-            // For SMS Sending Reliability
-            $this->client->SetSMSAttributes([
-                'attributes' => [
-                    'DefaultSMSType' => 'Transactional',
-                ],
-            ]);
         }
 
         $this->number = $number;
@@ -103,6 +96,13 @@ class SNSTransportService implements TransportServiceInterface
 
             $result = $this->client->publish([
                 'Message' => $message,
+                'MessageAttributes' => [
+                    // For SMS Sending Reliability
+                    'AWS.SNS.SMS.SMSType' => [
+                        'DataType' => 'String',
+                        'StringValue' => 'Transactional',
+                    ],
+                ],
                 'PhoneNumber' => $number,
             ]);
 
