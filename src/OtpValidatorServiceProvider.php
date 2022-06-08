@@ -18,13 +18,15 @@ class OtpValidatorServiceProvider extends ServiceProvider
     {
         $source = realpath(__DIR__ . '/../config/otp.php');
         $templates = realpath( __DIR__ . '/../template-otp');
+        $migrations = realpath( __DIR__ . '/database/migrations');
 
         // Check if the application is a Laravel OR Lumen instance to properly merge the configuration file.
         // Laravel Package Configuration
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
             $this->publishes([
                 $source => config_path('otp.php'),
-                $templates => base_path('resources/views/vendor/template-otp')
+                $templates => base_path('resources/views/vendor/template-otp'),
+                $migrations => base_path('database/migrations')
             ]);
         }
 
@@ -36,7 +38,7 @@ class OtpValidatorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($source, 'otp');
 
         // Migrate the OTPs tables
-        $this->migrateTables();
+        // $this->migrateTables();
     }
 
     /**
