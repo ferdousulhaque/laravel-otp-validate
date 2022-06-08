@@ -80,7 +80,8 @@ class SMSTransportService implements TransportServiceInterface
                 $this->number,
                 $this->replaceOtpInTheTemplate($this->otp, $this->service, $this->company));
         } catch (Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
+            throw $e;
         }
     }
 
@@ -166,7 +167,7 @@ class SMSTransportService implements TransportServiceInterface
             $this->response = $response->getBody()->getContents();
             $this->responseCode = $response->getStatusCode();
             Log::info("OTP Validator: Number: {$number} SMS Gateway Response Code: {$this->responseCode}");
-            Log::info("OTP Validator: Number: {$number} SMS Gateway Response Body: \n {$this->response}");
+            Log::info("OTP Validator: Number: {$number} SMS Gateway Response Body: \n".json_encode($this->response));
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 //dd($e);
@@ -179,6 +180,7 @@ class SMSTransportService implements TransportServiceInterface
 
                 // $this->response = $e->getResponseBodySummary($e->getResponse());
             }
+            throw $e;
         }
         return $this;
 

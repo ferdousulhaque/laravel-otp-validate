@@ -14,9 +14,13 @@ class Transporter
      */
     public static function sendCode(OtpRequestObject $request, string $otp)
     {
-        self::sendOverEmail($request, $otp);
-        self::sendOverSMS($request, $otp);
-        self::sendOverAwsSns($request, $otp);
+        try {
+            self::sendOverEmail($request, $otp);
+            self::sendOverSMS($request, $otp);
+            self::sendOverAwsSns($request, $otp);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public static function sendOverEmail(OtpRequestObject $request, string $otp)
@@ -26,7 +30,8 @@ class Transporter
                 self::sendOver(new EmailTransportService($request->email, $otp));
             }
         } catch (\Exception $ex) {
-            return false;
+            // return false;
+            throw $ex;
             //dd($ex->getMessage());
         }
     }
@@ -38,7 +43,8 @@ class Transporter
                 self::sendOver(new SMSTransportService($request->number, $otp));
             }
         } catch (\Exception $ex) {
-            return false;
+            throw $ex;
+            // return false;
             //dd($ex->getMessage());
         }
     }
@@ -50,13 +56,18 @@ class Transporter
                 self::sendOver(new SNSTransportService($request->number, $otp));
             }
         } catch (\Exception $ex) {
-            return false;
+            throw $ex;
+            // return false;
             //dd($ex->getMessage());
         }
     }
 
     public static function sendOver(TransportServiceInterface $service)
     {
-        $service->send();
+        try {
+            $service->send();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

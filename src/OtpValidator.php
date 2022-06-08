@@ -44,7 +44,15 @@ class OtpValidator
             ]);
         }
 
-        $getId = self::getUuidId($request);
+        try {
+            $getId = self::getUuidId($request);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return Responder::formatter([
+                'code' => StatusCodes::BAD_REQUEST,
+                'message' => StatusMessages::BAD_REQUEST
+            ]);
+        }
 
         if(empty($getId))
             return Responder::formatter([
@@ -77,15 +85,16 @@ class OtpValidator
             // OTP Generation and Persistence
             $getOtp = OtpService::otpGenerator();
             $uuid = md5($request->client_req_id.time());
-            OtpService::createOtpRecord($request, $getOtp, $uuid);
 
             // Send OTP
             Transporter::sendCode($request, $getOtp);
 
             return $uuid;
         } catch (\Exception $ex) {
-            return $ex->getMessage();
+            throw $ex;
+            // return $ex->getMessage();
         }
+        OtpService::createOtpRecord($request, $getOtp, $uuid);
     }
 
     /**
