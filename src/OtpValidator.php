@@ -89,12 +89,12 @@ class OtpValidator
             // Send OTP
             Transporter::sendCode($request, $getOtp);
 
+            OtpService::createOtpRecord($request, $getOtp, $uuid);
             return $uuid;
         } catch (\Exception $ex) {
             throw $ex;
             // return $ex->getMessage();
         }
-        OtpService::createOtpRecord($request, $getOtp, $uuid);
     }
 
     /**
