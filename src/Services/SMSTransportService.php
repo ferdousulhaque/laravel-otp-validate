@@ -4,6 +4,7 @@ namespace Ferdous\OtpValidator\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Query;
 use Exception;
 use GuzzleHttp\Exception\RequestException;
 use Ferdous\OtpValidator\Exceptions\InvalidMethodException;
@@ -95,12 +96,15 @@ class SMSTransportService implements TransportServiceInterface
      */
     public function sendMessage($to, $message, $extra_params = null, $extra_headers = [])
     {
+
         $config = config('otp.smsc');
         $headers = $config['headers'] ?? [];
         $number = isset($config['add_code']) ? $config['add_code'] . $to : $to;
         $send_to_param_name = $config['params']['send_to_param_name'];
         $msg_param_name = $config['params']['msg_param_name'];
         $params = $config['params']['others'];
+        $username = $params['username'] ?? '';
+        $password = $params['password'] ?? '';
 
         if ($extra_params) {
             $params = array_merge($params, $extra_params);
@@ -127,15 +131,17 @@ class SMSTransportService implements TransportServiceInterface
             $send_vars = array_merge($send_vars, $wrapperParams);
         }
 
+
         try {
             //Build Request
-            $request = new Request($config['method'], $config['url']);
+            $request = new Request($config['method'], $config['url'], $headers);
+
             if ($config['method'] == "GET") {
                 $promise = $this->getClient()->sendAsync(
                     $request,
                     [
                         'query' => $params,
-                        'headers' => $headers
+                        'auth' => [$username, $password]
                     ]
                 );
             } elseif ($config['method'] == "POST") {
@@ -144,19 +150,21 @@ class SMSTransportService implements TransportServiceInterface
                     $promise = $this->getClient()->sendAsync(
                         $request,
                         [
-                            'json' => $payload,
-                            'headers' => $headers
+                            'body' => Query::build($payload, PHP_QUERY_RFC1738),
+                            'auth' => [$username, $password]
                         ]
                     );
+
                 } else {
                     $promise = $this->getClient()->sendAsync(
                         $request,
                         [
                             'query' => $params,
-                            'headers' => $headers
+                            'auth' => [$username, $password]
                         ]
                     );
                 }
+
             } else {
                 throw new InvalidMethodException(
                     sprintf("Only GET and POST methods allowed.")
