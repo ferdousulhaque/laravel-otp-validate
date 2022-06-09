@@ -52,24 +52,5 @@
                 "OtpVerifier": "Ferdous\\OtpValidator\\OtpValidatorFacade"
             }
         }
-    },
-    "repositories": [
-    {
-        "type": "package",
-        "package": {
-            "name": "gitdevstar/laravel-otp-validate",
-            "version": "dev-master",
-            "source": {
-                "url": "git://github.com/gitdevstar/laravel-otp-validate.git",
-                "type": "git",
-                "reference": "master"
-            },
-            "autoload": {
-                "psr-0": {
-                    "Ferdous\\OtpValidator\\": "src/"
-                }
-            }
-        }
     }
-],
 }
