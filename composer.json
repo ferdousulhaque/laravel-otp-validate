@@ -1,8 +1,8 @@
 {
-    "name": "ferdous/laravel-otp-validate",
+    "name": "gitdevstar/laravel-otp-validate",
     "description": "Laravel package for OTP validation with built-in features like retry and resend mechanism. Built in max retry and max resend blocking. OTP/Security Code can be send over SMS or Email of your choice with user-defined template.",
     "type": "library",
-    "homepage": "https://github.com/ferdousulhaque/laravel-otp-validate",
+    "homepage": "https://github.com/gitdevstar/laravel-otp-validate",
     "keywords": [
         "php",
         "laravel",
@@ -17,9 +17,9 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "A S Md Ferdousul Haque",
-            "email": "ferdousul.haque@gmail.com",
-            "homepage": "http://ferdousulhaque.66ghz.com"
+            "name": "Logan P",
+            "email": "loganph.work@gmail.com",
+            "homepage": ""
         }
     ],
     "minimum-stability": "dev",
