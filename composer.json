@@ -65,7 +65,7 @@
                 "reference": "master"
             },
             "autoload": {
-                "psr-4": {
+                "psr-0": {
                     "Ferdous\\OtpValidator\\": "src/"
                 }
             }
