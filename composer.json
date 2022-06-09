@@ -22,7 +22,7 @@
             "homepage": ""
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "1.4.2",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
