@@ -339,7 +339,6 @@ Create a IAM user with the appropriate policy permissions. Go to the IAM service
             "Effect": "Allow",
             "Action": [
                 "sns:Publish",
-                "sns:SetSMSAttributes",
                 "sns:CheckIfPhoneNumberIsOptedOut"
             ],
             "Resource": [
@@ -350,4 +349,4 @@ Create a IAM user with the appropriate policy permissions. Go to the IAM service
 }
 ```
 
-Here we set the ability to publish, set SMS attributes and check for opt-outs and apply this across a wildcard resource instead of a specific topic as we will be sending notifications directly to phone numbers and not an SNS topic.
+Here we set the ability to publish, check for opt-outs, and apply this across a wildcard resource instead of a specific topic as we will be sending notifications directly to phone numbers and not an SNS topic.
