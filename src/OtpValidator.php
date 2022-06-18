@@ -44,7 +44,14 @@ class OtpValidator
             ]);
         }
 
-        $getId = self::getUuidId($request);
+        try {
+            $getId = self::getUuidId($request);
+        } catch (\Exception $ex) {
+            return Responder::formatter([
+                'code' => StatusCodes::BAD_REQUEST,
+                'message' => StatusMessages::BAD_REQUEST
+            ]);
+        }
 
         if(empty($getId))
             return Responder::formatter([
@@ -83,8 +90,8 @@ class OtpValidator
             Transporter::sendCode($request, $getOtp);
 
             return $uuid;
-        } catch (\Exception $ex) {
-            return $ex->getMessage();
+        } catch (\Throwable $th) {
+            throw $th;
         }
     }
 

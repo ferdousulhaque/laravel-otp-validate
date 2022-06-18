@@ -80,7 +80,8 @@ class SMSTransportService implements TransportServiceInterface
                 $this->number,
                 $this->replaceOtpInTheTemplate($this->otp, $this->service, $this->company));
         } catch (Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
+            throw $e;
         }
     }
 
