@@ -1,4 +1,10 @@
 # OTP Validate Package in Laravel
+![Packagist Downloads](https://img.shields.io/packagist/dt/ferdous/laravel-otp-validate)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+![Packagist Version](https://img.shields.io/packagist/v/ferdous/laravel-otp-validate)
+![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/ferdous/laravel-otp-validate)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ferdousulhaque/laravel-otp-validate)
+
 This package is for easy setup for OTP validation process. No hassle, just plug and play. Following the steps mentioned below and you will be able to get a fully working OTP Validation system. You can use this later for authentication or e-commerce production selling, order confirmation.
 
 ## Installation
