@@ -47,6 +47,9 @@ This command will create a `config/otp.php` file.
 ### Email Configs
 From the `.env` file the email configs are setup. No other changes required.
 
+See the `otp.php` file for optional customizations such as the ability to specify a custom
+`Mailable` class.
+
 ### SMS Configs
 As the SMS Gateways use different methods and also extra headers and params, you may need to update the sms configs in the `otp.php` file.
 

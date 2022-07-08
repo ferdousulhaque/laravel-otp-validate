@@ -17,6 +17,11 @@ return [
     ],
     'email' => [
         'from' => env('OTP_EMAIL_FROM','example@mail.com'),
+        // Class string specifying the `Mailable` class to use when sending e-mail OTPs.
+        // The constructor of the class will be called with a single string argument (the OTP
+        // value).
+        // If this config is left unspecified a default mailable class will be used.
+        'mailable-class' => Ferdous\OtpValidator\Services\OtpMailable::class,
         'name' => env('OTP_EMAIL_FROM_NAME','Example'),
         'subject' => env('OTP_EMAIL_SUBJECT','Security Code')
     ],
