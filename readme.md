@@ -7,6 +7,8 @@
 
 This package is for easy setup for OTP validation process. No hassle, just plug and play. Following the steps mentioned below and you will be able to get a fully working OTP Validation system. You can use this later for authentication or e-commerce production selling, order confirmation.
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/ferdousulhaque)
+
 ## Major change from version v2.0.1
 Only Supports 7.4 and above & 8.0 and above, so any PHP versions below users will need to upgrade to use the latest version onwards.
 * PHP version 7.4 and above
