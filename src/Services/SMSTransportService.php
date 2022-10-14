@@ -172,7 +172,7 @@ class SMSTransportService implements TransportServiceInterface
             if ($e->hasResponse()) {
                 //dd($e);
                 $response = $e->getResponse();
-                $this->response = $e->getResponseBodySummary($response);
+                $this->response = $response->getBody()->getContents();
                 $this->responseCode = $response->getStatusCode();
 
                 Log::error("OTP Validator: Number:{$number} SMS Gateway Response Code: {$this->responseCode}");
