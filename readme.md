@@ -177,9 +177,9 @@ class OtpController extends Controller
 Add the following to the `routes/web.php` file.
 
 ```
-Route::get('/test/otp-request', 'OtpController@requestForOtp');
-Route::get('/test/otp-validate', 'OtpController@validateOtp');
-Route::get('/test/otp-resend', 'OtpController@resendOtp');
+Route::get('/test/otp-request', [\App\Http\Controllers\OtpController::class, 'requestForOtp']);
+Route::get('/test/otp-validate', [\App\Http\Controllers\OtpController::class, 'validateOtp']);
+Route::get('/test/otp-resend', [\App\Http\Controllers\OtpController::class, 'resendOtp']);
 ```
 
 ## Response/Error Descriptions
