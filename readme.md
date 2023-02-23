@@ -6,7 +6,7 @@ This package is for easy setup for OTP validation process. No hassle, just plug 
 ### Install Package
 Require this package with composer:
 ```
-composer require ferdous/laravel-otp-validate
+composer require gitdevstar/laravel-otp-validate
 ```
 ### Add Service Provider & Facade
 
