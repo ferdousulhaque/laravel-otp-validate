@@ -1,25 +1,40 @@
 <?php
+declare(strict_types=1);
 
-namespace Ferdous\OtpValidator\Tests;
+namespace Ferdous\OtpValidator\Tests\Feature;
 
 use Ferdous\OtpValidator\Services\OtpService;
-use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class OTPTest extends TestCase
 {
-    /** #test */
-    public function testGenerateOtpPrivateStaticMethod()
+    private OtpService $otpService;
+
+    public function setUp(): void
     {
-        $otp = new OtpService();
-        $otp_number = $this->invokeMethod($otp, 'otpGenerator', [10]);
-        $this->assertTrue(is_numeric($otp_number));
+        $this->otpService = new OtpService();
     }
 
-    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    /**
+     *
+     * @dataProvider dataProviderForOtpGenerate
+     */
+    public function testOtpGenerate($digit, $expected): void
     {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-        return $method->invokeArgs($object, $parameters);
+        $random = $this->otpService->otpGenerator($digit);
+        $this->assertTrue(strlen((string)$random) == $expected);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function dataProviderForOtpGenerate(): array
+    {
+        return [
+            [10, 10],
+            [100, 100],
+            [0,0],
+            [-1,0]
+        ];
     }
 }
