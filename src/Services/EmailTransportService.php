@@ -17,8 +17,9 @@ class EmailTransportService implements TransportServiceInterface
 
     public function send()
     {
+        $mailableClass = config('otp.email.mailable-class', OtpMailable::class);
         if (!empty($this->email) && !empty($this->otp)) {
-            Mail::to($this->email)->send(new OtpMailable($this->otp));
+            Mail::to($this->email)->send(new $mailableClass($this->otp));
         }
     }
 
